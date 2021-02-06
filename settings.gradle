@@ -1,0 +1,2 @@
+include ':app'
+rootProject.name = "13.2_RadioApp_with_BroadcastReceiver"

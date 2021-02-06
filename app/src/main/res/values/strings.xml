@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">13.2_RadioApp_with_BroadcastReceiver</string>
+    <string name="stop">Stop</string>
+    <string name="play">Play</string>
+    <string name="_continue">Continue</string>
+    <string name="pause">Pause</string>
+</resources>
