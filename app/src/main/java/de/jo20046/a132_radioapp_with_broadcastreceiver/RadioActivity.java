@@ -28,11 +28,14 @@ public class RadioActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // set layout
         setContentView(R.layout.activity_radio);
         webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(getIntent().getExtras().getString("URL"));
 
+        // button listeners
         Button btnStop = (Button) findViewById(R.id.btn_stop);
         Button btnPlay = (Button) findViewById(R.id.btn_play);
         Button btnPause = (Button) findViewById(R.id.btn_pause);
@@ -64,33 +67,28 @@ public class RadioActivity extends Activity {
             }
         });
 
+        // start and bind radio service
+        Intent intent = new Intent(this, RadioService.class);
+        intent.putExtra("Stream", getIntent().getExtras().getString("Stream"));
+        startService(intent);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+
+        // register broadcast receiver
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(receiver, filter);
     }
 
     @Override
-    protected void onStart() {
-        Log.d(tag, "onStart() - Activity");
-        super.onStart();
-        Intent intent = new Intent(this, RadioService.class);
-        intent.putExtra("Stream", getIntent().getExtras().getString("Stream"));
-        startService(intent);
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-    }
+    protected void onDestroy() {
+        super.onDestroy();
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+        // unregister broadcast receiver, unbind & stop radio service
+        unregisterReceiver(receiver);
         if (serviceBound) {
             unbindService(serviceConnection);
             serviceBound = false;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         Intent intent = new Intent(this, RadioService.class);
         stopService(intent);
     }
