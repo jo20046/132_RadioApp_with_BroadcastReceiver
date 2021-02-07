@@ -20,7 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RadioActivity" />
+        <activity
+            android:name=".RadioActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
 
         <service android:name=".RadioService" />
     </application>
